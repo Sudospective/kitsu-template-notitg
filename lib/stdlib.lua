@@ -42,9 +42,12 @@ SRT_STYLE = false
 
 Node = assert(loadfile(SongDir .. 'lib/nodebuilder.lua'))() -- Nodebuilder
 Mods = assert(loadfile(SongDir .. 'lib/modsbuilder.lua'))() -- Modsbuilder
-local Corope = assert(loadfile(SongDir .. 'lib/corope.lua'))() -- Corope
 
+-- corope.lua needs to be ported for Lua 5.0 before being enabled for NotITG. ~Sudo
+--[[
+local Corope = assert(loadfile(SongDir .. 'lib/corope.lua'))() -- Corope
 Async = Corope({errhand = lua.ReportScriptError})
+--]]
 
 PL = {}
 
