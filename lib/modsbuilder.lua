@@ -3,47 +3,50 @@ sudo()
 local Mods
 
 -- Keep the player options from the enabled players that are available.
-local POptions = {}
-for i, v in ipairs( GAMESTATE:GetEnabledPlayers() ) do
-    POptions[i] = GAMESTATE:GetPlayerState(v):GetPlayerOptions('ModsLevel_Song')
-end
+
+-- Previous mod value
 
 local function ApplyModifiers(mod, percent, pn)
-    local amount = percent * 0.01
-    if mod:sub(2) == 'Mod' then amount = percent end
+    local modstring = '*-1 '..percent..' '..mod:lower()
+    if mod:sub(2) == 'Mod' then
+        modstring = '*-1 '..percent..mod:sub(1, 1):lower()
+    end
     if pn then
-        if POptions[pn] then
-            POptions[pn][mod](POptions[pn], amount, 9e9)
-        end
+        GAMESTATE:ApplyModifiers(modstring, pn)
     else
-        for p in ipairs(POptions) do
-            POptions[p][mod](POptions[p], amount, 9e9)
-        end
+        GAMESTATE:ApplyModifiers(modstring)
     end
 end
 
 -- TODO: Make this less painful to deal with before you die at age 80.
 local branches = {}
+local prev_mods = {}
 local function UpdateMods()
     for _, b in ipairs(branches) do
         for i, m in ipairs(b) do
             for j, v in ipairs(m.Modifiers) do
+                local mod_perc = 0
                 -- If the player where we're trying to access is not available, then don't even update.
                 if m.Player and not POptions[ m.Player ] then break end
                 if BEAT >= m.Start and BEAT < (m.Start + m.Length) then
                     -- Get start percent
                     local pl = m.Player or 1
-                    v[3] = v[3] or (POptions[pl][v[2]](POptions[pl]) or 1) * 100
+                    v[3] = v[3] or prev_mods[v[2]]
+                    --[[
                     if v[2]:sub(2) == 'Mod' then
                         v[3] = (v[3] * 0.01) + 1 -- what even
                     end
+                    ]]
                     local ease = m.Ease((BEAT - m.Start) / m.Length)
                     local perc = ease * (v[1] - v[3]) + v[3]
                     ApplyModifiers(v[2], perc, m.Player)
+                    mod_perc = perc
                 elseif BEAT >= (m.Start + m.Length) then
                     ApplyModifiers(v[2], v[1], m.Player)
+                    mod_perc = v[1]
                     table.remove(m.Modifiers, j)
                 end
+                prev_mods[v[2]] = mod_perc
             end
             if #b < 1 then table.remove(branches, i) end
         end
@@ -67,7 +70,7 @@ local ModTree = Def.ActorFrame {
     deleted under any desired circumstance.
 ]]
 
-Tweens.instant = function(x) return 1 end -- fite me
+function instant(x) return 1 end -- fite me
 
 -- Create a new mod branch.
 local function new()

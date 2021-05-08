@@ -21,7 +21,7 @@ end
 sudo()
 
 -- First set of global variables
-printerr = lua.ReportScriptError
+printerr = Trace
 
 SW, SH = SCREEN_WIDTH, SCREEN_HEIGHT -- screen width and height
 SCX, SCY = SCREEN_CENTER_X, SCREEN_CENTER_Y -- screen center x and y
@@ -31,8 +31,8 @@ TICK = 1 / TICKRATE -- seconds since last tick
 CONST_TICK = false -- set this to true for automagic frame limiting!!!! o A o
 
 DT = 0 -- seconds since last frame
-BEAT = GAMESTATE:GetSongPosition():GetSongBeat() -- current beat
-BPS = GAMESTATE:GetSongPosition():GetCurBPS() -- current beats per second
+BEAT = GAMESTATE:GetSongBeat() -- current beat
+BPS = GAMESTATE:GetCurBPS() -- current beats per second
 BPM = BPS * 60 -- beats per minute
 BPT = TICK * BPS -- beats per tick
 SPB = 1 / BPS -- seconds per beat
@@ -40,13 +40,13 @@ TPB = SPB * TICKRATE -- ticks per beat
 CENTER_PLAYERS = false
 SRT_STYLE = false
 
-Node = assert(loadfile(SongDir .. 'lib/nodebuilder.lua'))() -- Nodebuilder
-Mods = assert(loadfile(SongDir .. 'lib/modsbuilder.lua'))() -- Modsbuilder
+Node = assert(loadfile('lib/nodebuilder.lua'))() -- Nodebuilder
+Mods = assert(loadfile('lib/modsbuilder.lua'))() -- Modsbuilder
 
 -- corope.lua needs to be ported for Lua 5.0 before being enabled for NotITG. ~Sudo
 --[[
-local Corope = assert(loadfile(SongDir .. 'lib/corope.lua'))() -- Corope
-Async = Corope({errhand = lua.ReportScriptError})
+local Corope = assert(loadfile('lib/corope.lua'))() -- Corope
+Async = Corope({errhand = printerr})
 --]]
 
 PL = {}
@@ -59,8 +59,8 @@ return Def.ActorFrame {
 		else
 			DT = self:GetEffectDelta()
 		end
-		BEAT = GAMESTATE:GetSongPosition():GetSongBeat()
-		BPS = GAMESTATE:GetSongPosition():GetCurBPS()
+		BEAT = GAMESTATE:GetSongBeat()
+		BPS = GAMESTATE:GetCurBPS()
 		BPM = BPS * 60
 		BPT = TICK * BPS
 		SPB = 1 / BPS
@@ -68,7 +68,7 @@ return Def.ActorFrame {
 		MESSAGEMAN:Broadcast('Update')
 	end,
 	UpdateMessageCommand = function(self)
-		Async:update(DT)
+		--Async:update(DT)
 		if sudo.update then
 			sudo.update(DT)
 		end
@@ -81,16 +81,17 @@ return Def.ActorFrame {
 	ReadyCommand = function(self)
 		-- Second set of global variables
 		SCREEN = SCREENMAN:GetTopScreen() -- top screen
-		for i, v in ipairs( GAMESTATE:GetEnabledPlayers() ) do
+		for i = 1, GAMESTATE:GetNumPlayersEnabled() do
 			local info = {}
 
-			local pl = SCREEN:GetChild('Player'..ToEnumShortString(v))
-			info.Player = pl
-			info.Combo = pl:GetChild('Combo')
-			info.Judgment = pl:GetChild('Judgment')
-			info.NoteField = pl:GetChild('NoteField')
-
-			PL[i] = info
+			local pl = SCREEN:GetChild('PlayerP'..i)
+			if pl then
+				info.Player = pl
+				info.Combo = pl:GetChild('Combo')
+				info.Judgment = pl:GetChild('Judgment')
+				info.NoteField = pl:GetChild('NoteField')
+				PL[i] = info
+			end
 		end
 		--P1, P2 = SCREEN:GetChild('PlayerP1') or nil, SCREEN:GetChild('PlayerP2') or nil -- player 1 and 2
 		--L1, L2 = SCREEN:GetChild('LifeP1') or nil, SCREEN:GetChild('LifeP2') or nil -- life 1 and 2
@@ -101,7 +102,7 @@ return Def.ActorFrame {
 		PL = setmetatable(PL, {
 			__index = function(this, number)
 				if number < 1 or number > #this then
-					lua.ReportScriptError( string.format("[PL] No player was found on index %i, using first item instead.", number) )
+					printerr( string.format("[PL] No player was found on index %i, using first item instead.", number) )
 					return this[1]
 				end
 				return this
@@ -116,12 +117,11 @@ return Def.ActorFrame {
 			end
 		end
 		if SRT_STYLE then
-			SCREEN:GetChild('Underlay'):visible(false)
-			for i, v in ipairs( GAMESTATE:GetEnabledPlayers() ) do
-				SCREEN:GetChild('LifeP'..i):visible(false)
-				SCREEN:GetChild('ScoreP'..i):visible(false)
+			for i = 1, #PL do
+				SCREEN:GetChild('LifeP'..i):hidden(1)
+				SCREEN:GetChild('ScoreP'..i):hidden(1)
 			end
-			SCREEN:GetChild('Overlay'):visible(false)
+			SCREEN:GetChild('Overlay'):hidden(1)
 		end
 		self:queuecommand('BeginFrame')
 	end

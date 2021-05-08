@@ -1,0 +1,27 @@
+<Layer
+    Type = "ActorFrame"
+    Condition = "(function(self)
+        _G.sudo = {}
+        assert(loadfile('lib/actorgen.lua'))()
+        return true
+    end)()"
+    InitCommand = "%function(self)
+        sudo.fg = self
+        self:sleep(9e9)
+		sudo.ActorList = Def.ActorFrame {
+            assert(loadfile('lib/stdlib.lua'))(),
+            assert(loadfile('lua/nodes.lua'))(),
+			assert(loadfile('lua/mods.lua'))(),
+		}
+    end"
+    OnCommand = "%function(self)
+        self:playcommand('Ready')
+    end"
+><children>
+	<Layer 
+		Name="Root"
+		File="../main/actors.xml"
+		Condition="actorgen.Template(sudo.ActorList)"
+		InitCommand="%actorgen.InitCmd"
+	/>
+</children></Layer>
