@@ -44,7 +44,7 @@ Branch:ExschMod(10.5, 14, 100, 0, 'reverse1', 'end', Tweens.outElastic)
 Branch:ExschMod(11.0, 14, 100, 0, 'reverse2', 'end', Tweens.outElastic)
 Branch:ExschMod(11.5, 14, 100, 0, 'reverse3', 'end', Tweens.outElastic)
 
-Branch:InsertMod(15, 2, Tweens.outBack, {{0, 'invert'}})
+Branch:InsertMod(15, 2, Tweens.outElastic, {{0, 'invert'}})
 
 Branch:AddToModTree()
 --]]

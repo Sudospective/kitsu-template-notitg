@@ -3,15 +3,11 @@ sudo()
 local Mods
 
 -- Keep the player options from the enabled players that are available.
-
--- Previous mod value
-
 local function ApplyMods(mod, percent, pn)
     local modstring = '*-1 '..percent..' '..string.lower(mod)
-    if string.sub(mod, 2) == 'Mod' then
+    if string.lower(string.sub(mod, 2)) == 'mod' then
         modstring = '*-1 '..percent..string.lower(string.sub(mod, 1, 1))
     end
-    Trace(modstring)
     if pn then
         GAMESTATE:ApplyModifiers(modstring, pn)
     else
@@ -26,18 +22,12 @@ local function UpdateMods()
     for _, b in ipairs(branches) do
         for i, m in ipairs(b) do
             for j, v in ipairs(m.Modifiers) do
-                local mod_perc = 0
                 -- If the player where we're trying to access is not available, then don't even update.
                 if m.Player and not POptions[ m.Player ] then break end
                 if BEAT >= m.Start and BEAT < (m.Start + m.Length) then
                     -- Get start percent
                     local pl = m.Player or 1
                     v[3] = v[3] or mod_percents[v[2]] or 0
-                    --[[
-                    if v[2]:sub(2) == 'Mod' then
-                        v[3] = (v[3] * 0.01) + 1 -- what even
-                    end
-                    ]]
                     local ease = m.Ease((BEAT - m.Start) / m.Length)
                     local perc = ease * (v[1] - v[3]) + v[3]
                     ApplyMods(v[2], perc, m.Player)
