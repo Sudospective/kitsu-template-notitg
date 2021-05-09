@@ -42,6 +42,7 @@ SRT_STYLE = false
 
 Node = assert(loadfile('lib/nodebuilder.lua'))() -- Nodebuilder
 Mods = assert(loadfile('lib/modsbuilder.lua'))() -- Modsbuilder
+Tweens = assert(loadfile('lib/ease.lua'))() -- Eases
 
 -- corope.lua needs to be ported for Lua 5.0 before being enabled for NotITG. ~Sudo
 --[[

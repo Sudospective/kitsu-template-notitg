@@ -6,11 +6,12 @@ local Mods
 
 -- Previous mod value
 
-local function ApplyModifiers(mod, percent, pn)
-    local modstring = '*-1 '..percent..' '..mod:lower()
-    if mod:sub(2) == 'Mod' then
-        modstring = '*-1 '..percent..mod:sub(1, 1):lower()
+local function ApplyMods(mod, percent, pn)
+    local modstring = '*-1 '..percent..' '..string.lower(mod)
+    if string.sub(mod, 2) == 'Mod' then
+        modstring = '*-1 '..percent..string.lower(string.sub(mod, 1, 1))
     end
+    Trace(modstring)
     if pn then
         GAMESTATE:ApplyModifiers(modstring, pn)
     else
@@ -20,7 +21,7 @@ end
 
 -- TODO: Make this less painful to deal with before you die at age 80.
 local branches = {}
-local prev_mods = {}
+local mod_percents = {}
 local function UpdateMods()
     for _, b in ipairs(branches) do
         for i, m in ipairs(b) do
@@ -31,7 +32,7 @@ local function UpdateMods()
                 if BEAT >= m.Start and BEAT < (m.Start + m.Length) then
                     -- Get start percent
                     local pl = m.Player or 1
-                    v[3] = v[3] or prev_mods[v[2]]
+                    v[3] = v[3] or mod_percents[v[2]] or 0
                     --[[
                     if v[2]:sub(2) == 'Mod' then
                         v[3] = (v[3] * 0.01) + 1 -- what even
@@ -39,14 +40,13 @@ local function UpdateMods()
                     ]]
                     local ease = m.Ease((BEAT - m.Start) / m.Length)
                     local perc = ease * (v[1] - v[3]) + v[3]
-                    ApplyModifiers(v[2], perc, m.Player)
-                    mod_perc = perc
+                    ApplyMods(v[2], perc, m.Player)
+                    mod_percents[v[2]] = perc
                 elseif BEAT >= (m.Start + m.Length) then
-                    ApplyModifiers(v[2], v[1], m.Player)
-                    mod_perc = v[1]
+                    ApplyMods(v[2], v[1], m.Player)
+                    mod_percents[v[2]] = v[1]
                     table.remove(m.Modifiers, j)
                 end
-                prev_mods[v[2]] = mod_perc
             end
             if #b < 1 then table.remove(branches, i) end
         end

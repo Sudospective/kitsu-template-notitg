@@ -34,7 +34,7 @@ sudo()
 local nummy = Node.new('Quad')
 
 nummy:SetReady(function(self)
-    self:Center()
+    self:xy(SCX, SCY)
     self:SetWidth(64)
     self:SetHeight(64)
 end)
