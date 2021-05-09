@@ -5,7 +5,7 @@ The Kitsu Template is a template designed to make modcharting in Outfox feel mor
 ## Creating a Node
 Nodes are Kitsu's form of actors with embedded scripts or functions. To create one, simply call the `Node.new` function.
 ```lua
-local MyNode = Node.new('Quad') -- You can optionally pass in a string for the type, or an entire Outfox actor for convenience.
+local MyNode = Node.new('Quad') -- You can optionally pass in a string for the type, or an entire Outfox-style actor for convenience.
 ```
 Once you've created your node, you can attach a script with `AttachScript`.
 ```lua
