@@ -29,7 +29,7 @@ sudo()
 --[[
 local Branch = Mods.new()
 
-Branch:MirinMod {0, 1, Tweens.inOutBack, 20, 'drunk', 20, 'tipsy', 100, 'bumpy', 100, 'invert'}
+Branch:MirinMod {0, 1, Tweens.inoutback, 20, 'drunk', 20, 'tipsy', 100, 'bumpy', 100, 'invert'}
 
 local modtable = {
     {100, 'reverse0'},
@@ -37,14 +37,14 @@ local modtable = {
     {100, 'reverse2'},
     {100, 'reverse3'},
 }
-Branch:InsertMod(5, 3, Tweens.outBounce, modtable, 0.25)
+Branch:InsertMod(5, 3, Tweens.outbounce, modtable, 0.25)
 
-Branch:ExschMod(10.0, 14, 100, 0, 'reverse0', 'end', Tweens.outElastic)
-Branch:ExschMod(10.5, 14, 100, 0, 'reverse1', 'end', Tweens.outElastic)
-Branch:ExschMod(11.0, 14, 100, 0, 'reverse2', 'end', Tweens.outElastic)
-Branch:ExschMod(11.5, 14, 100, 0, 'reverse3', 'end', Tweens.outElastic)
+Branch:ExschMod(10.0, 14, 100, 0, 'reverse0', 'end', Tweens.outelastic)
+Branch:ExschMod(10.5, 14, 100, 0, 'reverse1', 'end', Tweens.outelastic)
+Branch:ExschMod(11.0, 14, 100, 0, 'reverse2', 'end', Tweens.outelastic)
+Branch:ExschMod(11.5, 14, 100, 0, 'reverse3', 'end', Tweens.outelastic)
 
-Branch:InsertMod(15, 2, Tweens.outElastic, {{0, 'invert'}})
+Branch:InsertMod(15, 2, Tweens.outelastic, {{0, 'invert'}})
 
 Branch:AddToModTree()
 --]]
