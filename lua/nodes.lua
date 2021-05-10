@@ -52,10 +52,13 @@ for i = 1, 4 do
 	end)
 	QuadPad[idx]:SetInput(function(self, event)
 		if event.button == PadDirs[idx] then
-			if event.type == "InputEventType_FirstPress" then
-				self:diffuse(0, 1, 0, 1)
-			elseif event.type == "InputEventType_Release" then
-				self:diffuse(1, 1, 1, 1)
+			local col = event.DeviceInput.level
+			if event.PlayerNumber == 0 then
+				if event.type == 'InputEventType_Release' then
+					self:diffuse(1, 1, 1, 1)
+				else
+					self:diffuse(col, 0, 1 - col, 1)
+				end
 			end
 		end
 	end)

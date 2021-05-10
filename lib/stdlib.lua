@@ -59,6 +59,8 @@ Node = assert(loadfile('lib/nodebuilder.lua'))() -- Nodebuilder
 Mods = assert(loadfile('lib/modsbuilder.lua'))() -- Modsbuilder
 Tweens = assert(loadfile('lib/ease.lua'))() -- Eases
 
+Settings = assert(loadfile('lua/settings.lua'))() -- Settings
+
 -- corope.lua needs to be ported for Lua 5.0 before being enabled for NotITG. ~Sudo
 --[[
 local Corope = assert(loadfile('lib/corope.lua'))() -- Corope
@@ -71,7 +73,10 @@ event = {
 	button = nil,
 	type = nil,
 	PlayerNumber = nil,
-	controller = nil
+	controller = nil,
+	DeviceInput = {
+		level = 0,
+	}
 }
 
 return Def.ActorFrame {
@@ -153,6 +158,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1DownPressMessageCommand = function(self)
@@ -160,6 +166,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1UpPressMessageCommand = function(self)
@@ -167,6 +174,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1RightPressMessageCommand = function(self)
@@ -174,6 +182,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1LeftLiftMessageCommand = function(self)
@@ -181,6 +190,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1DownLiftMessageCommand = function(self)
@@ -188,6 +198,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1UpLiftMessageCommand = function(self)
@@ -195,6 +206,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1RightLiftMessageCommand = function(self)
@@ -202,6 +214,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2LeftPressMessageCommand = function(self)
@@ -209,6 +222,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2DownPressMessageCommand = function(self)
@@ -216,6 +230,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2UpPressMessageCommand = function(self)
@@ -223,6 +238,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2RightPressMessageCommand = function(self)
@@ -230,6 +246,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2LeftLiftMessageCommand = function(self)
@@ -237,6 +254,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2DownLiftMessageCommand = function(self)
@@ -244,6 +262,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2UpLiftMessageCommand = function(self)
@@ -251,6 +270,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2RightLiftMessageCommand = function(self)
@@ -258,6 +278,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1StartPressMessageCommand = function(self)
@@ -265,6 +286,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1BackPressMessageCommand = function(self)
@@ -272,6 +294,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1StartLiftMessageCommand = function(self)
@@ -279,6 +302,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP1BackLiftMessageCommand = function(self)
@@ -286,6 +310,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 0
 		event.controller = 'GameController_1'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2StartPressMessageCommand = function(self)
@@ -293,6 +318,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2BackPressMessageCommand = function(self)
@@ -300,6 +326,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_FirstPress'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2StartLiftMessageCommand = function(self)
@@ -307,6 +334,7 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	StepP2BackLiftMessageCommand = function(self)
@@ -314,6 +342,41 @@ return Def.ActorFrame {
 		event.type = 'InputEventType_Release'
 		event.PlayerNumber = 1
 		event.controller = 'GameController_2'
+		event.DeviceInput.level = 1
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	MidiInMessageCommand = function(self)
+		local player
+		local column = midi_controlnum
+		for k, v in pairs(Settings.MidiInput) do
+			if column == v.Left then
+				player = tonumber(string.sub(k, 2))
+				event.button = 'Left'
+			elseif column == v.Down then
+				player = tonumber(string.sub(k, 2))
+				event.button = 'Down'
+			elseif column == v.Up then
+				player = tonumber(string.sub(k, 2))
+				event.button = 'Up'
+			elseif column == v.Right then
+				player = tonumber(string.sub(k, 2))
+				event.button = 'Right'
+			end
+			if player then
+				event.PlayerNumber = player - 1
+				event.controller = 'GameController_'..player
+				if midi_type == v.Press then
+					event.type = 'InputEventType_FirstPress'
+				elseif midi_type == v.Hold then
+					event.type = 'InputEventType_Repeat'
+				elseif midi_type == v.Release then
+					event.type = 'InputEventType_Release'
+				end
+				event.DeviceInput.level = math.max(math.min((midi_value / v.MaxLevel), 1), 0)
+			end
+		end
+		local str = midi_type..' | '..midi_controlnum..' | '..midi_value
+		--Trace(str)
 		MESSAGEMAN:Broadcast('Input')
 	end,
 	InputMessageCommand = function(self)
