@@ -20,6 +20,21 @@ end
 
 sudo()
 
+function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
 -- First set of global variables
 printerr = Trace
 
@@ -51,6 +66,13 @@ Async = Corope({errhand = printerr})
 --]]
 
 PL = {}
+
+event = {
+	button = nil,
+	type = nil,
+	PlayerNumber = nil,
+	controller = nil
+}
 
 return Def.ActorFrame {
 	BeginFrameCommand = function(self)
@@ -103,7 +125,7 @@ return Def.ActorFrame {
 		PL = setmetatable(PL, {
 			__index = function(this, number)
 				if number < 1 or number > #this then
-					printerr( string.format("[PL] No player was found on index %i, using first item instead.", number) )
+					printerr( string.format('[PL] No player was found on index %i, using first item instead.', number) )
 					return this[1]
 				end
 				return this
@@ -125,5 +147,176 @@ return Def.ActorFrame {
 			SCREEN:GetChild('Overlay'):hidden(1)
 		end
 		self:queuecommand('BeginFrame')
+	end,
+	StepP1LeftPressMessageCommand = function(self)
+		event.button = 'Left'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1DownPressMessageCommand = function(self)
+		event.button = 'Down'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1UpPressMessageCommand = function(self)
+		event.button = 'Up'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1RightPressMessageCommand = function(self)
+		event.button = 'Right'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1LeftLiftMessageCommand = function(self)
+		event.button = 'Left'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1DownLiftMessageCommand = function(self)
+		event.button = 'Down'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1UpLiftMessageCommand = function(self)
+		event.button = 'Up'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1RightLiftMessageCommand = function(self)
+		event.button = 'Right'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2LeftPressMessageCommand = function(self)
+		event.button = 'Left'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2DownPressMessageCommand = function(self)
+		event.button = 'Down'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2UpPressMessageCommand = function(self)
+		event.button = 'Up'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2RightPressMessageCommand = function(self)
+		event.button = 'Right'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2LeftLiftMessageCommand = function(self)
+		event.button = 'Left'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2DownLiftMessageCommand = function(self)
+		event.button = 'Down'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2UpLiftMessageCommand = function(self)
+		event.button = 'Up'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2RightLiftMessageCommand = function(self)
+		event.button = 'Right'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1StartPressMessageCommand = function(self)
+		event.button = 'Start'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1BackPressMessageCommand = function(self)
+		event.button = 'Back'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1StartLiftMessageCommand = function(self)
+		event.button = 'Start'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP1BackLiftMessageCommand = function(self)
+		event.button = 'Back'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 0
+		event.controller = 'GameController_1'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2StartPressMessageCommand = function(self)
+		event.button = 'Start'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2BackPressMessageCommand = function(self)
+		event.button = 'Back'
+		event.type = 'InputEventType_FirstPress'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2StartLiftMessageCommand = function(self)
+		event.button = 'Start'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	StepP2BackLiftMessageCommand = function(self)
+		event.button = 'Back'
+		event.type = 'InputEventType_Release'
+		event.PlayerNumber = 1
+		event.controller = 'GameController_2'
+		MESSAGEMAN:Broadcast('Input')
+	end,
+	InputMessageCommand = function(self)
+		if sudo.input then sudo.input(event) end
 	end
 }

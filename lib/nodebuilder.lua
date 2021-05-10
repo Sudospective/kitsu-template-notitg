@@ -21,12 +21,17 @@ local function new(obj)
 end
 local function AttachScript(self, scriptpath)
 	--Trace('Node:AttachScript')
-	local ready, update = assert(loadfile(SongDir .. scriptpath))()
+	kitsu = {}
+	assert(loadfile(scriptpath))()
+	local scr = deepcopy(kitsu)
 	self.ReadyCommand = function(self)
-		return ready(self)
+		if scr.ready then return scr.ready(self) end
 	end
 	self.UpdateMessageCommand = function(self)
-		return update(self, DT)
+		if scr.update then return scr.update(self, DT) end
+	end
+	self.InputMessageCommand = function(self)
+		if scr.input then return scr.input(self, event) end
 	end
 end
 local function SetReady(self, func)
@@ -39,6 +44,11 @@ local function SetUpdate(self, func)
 	--Trace('Node:SetUpdate')
 	self.UpdateMessageCommand = function(self)
 		return func(self, DT)
+	end
+end
+local function SetInput(self, func)
+	self.InputMessageCommand = function(self)
+		return func(self, event)
 	end
 end
 local function AddToNodeTree(self)
@@ -55,6 +65,7 @@ Node = {
 	AttachScript = AttachScript,
 	SetReady = SetReady,
 	SetUpdate = SetUpdate,
+	SetInput = SetInput,
 	AddToNodeTree = AddToNodeTree,
 	GetNodeTree = GetNodeTree
 }

@@ -1,9 +1,10 @@
 sudo()
 
-local function ready(self)
+function kitsu.ready(self)
 end
 
-local function update(self, dt)
+function kitsu.update(self, dt)
 end
 
-return ready, update
+function kitsu.input(self, event)
+end

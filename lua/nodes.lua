@@ -31,18 +31,36 @@ sudo()
 -- Uncomment for example --
 ---------------------------
 --[[
-local nummy = Node.new('Quad')
-
-nummy:SetReady(function(self)
-    self:xy(SCX, SCY)
-    self:SetWidth(64)
-    self:SetHeight(64)
-end)
-nummy:SetUpdate(function(self, dt)
-    self:addrotationz(360 * dt)
-end)
-
-nummy:AddToNodeTree()
+local QuadPad = {}
+local PadDirs = {"Left", "Down", "Up", "Right"}
+for i = 1, 4 do
+	local idx = i
+	QuadPad[idx] = Node.new('Quad')
+	QuadPad[idx]:SetReady(function(self)
+		self:xy(SCX, SCY)
+		self:SetWidth(64)
+		self:SetHeight(64)
+		if idx == 1 then
+			self:addx(-64) -- Left
+		elseif idx == 2 then
+			self:addy(64) -- Down
+		elseif idx == 3 then
+			self:addy(-64) -- Up
+		else
+			self:addx(64) -- Right
+		end
+	end)
+	QuadPad[idx]:SetInput(function(self, event)
+		if event.button == PadDirs[idx] then
+			if event.type == "InputEventType_FirstPress" then
+				self:diffuse(0, 1, 0, 1)
+			elseif event.type == "InputEventType_Release" then
+				self:diffuse(1, 1, 1, 1)
+			end
+		end
+	end)
+	QuadPad[idx]:AddToNodeTree()
+end
 --]]
 ---------------------------
 
@@ -60,6 +78,9 @@ function ready()
 end
 
 function update(dt)
+end
+
+function input(event)
 end
 
 return Node.GetNodeTree()
