@@ -78,6 +78,12 @@ event = {
 		level = 0,
 	}
 }
+notes = {
+	Left = nil,
+	Down = nil,
+	Up = nil,
+	Right = nil
+}
 
 return Def.ActorFrame {
 	BeginFrameCommand = function(self)
@@ -366,9 +372,19 @@ return Def.ActorFrame {
 				event.PlayerNumber = player - 1
 				event.controller = 'GameController_'..player
 				if midi_type == v.Press then
+					--[[
+					notes[event.button] = PL[player].Player:GetNoteData(BEAT - 0.1, BEAT + 0.1)
+					PL[player].Player:RealStep(column)
+					--]]
 					event.type = 'InputEventType_FirstPress'
 				elseif midi_type == v.Hold then
 					event.type = 'InputEventType_Repeat'
+					--[[
+					if notes[event.button] and notes[event.button][1][2] == column and notes[event.button][1][3] == 2 then
+						PL[player].Player:RealStep(column)
+						PL[player].Player:DidHoldNote(column)
+					end
+					--]]
 				elseif midi_type == v.Release then
 					event.type = 'InputEventType_Release'
 				end
