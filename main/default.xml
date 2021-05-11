@@ -7,16 +7,16 @@
     end)()"
     InitCommand = "%function(self)
         sudo.fg = self
-        self:sleep(9e9)
 		sudo.ActorList = Def.ActorFrame {
             assert(loadfile('lib/stdlib.lua'))(),
             sudo(assert(loadfile('lua/nodes.lua')))(),
 			sudo(assert(loadfile('lua/mods.lua')))(),
 		}
+        self:sleep(9e9)
     end"
-    OnCommand = "%function(self)
-        self:playcommand('Ready')
-    end"
+	OnCommand = "%function(self)
+		self:playcommand('Prep')
+	end"
 ><children>
 	<Layer 
 		Name="Root"

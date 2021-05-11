@@ -39,8 +39,7 @@ function deepcopy(orig)
     return copy
 end
 
--- First set of global variables
-printerr = Trace
+printerr = Trace -- print to console
 
 SCREEN = SCREENMAN:GetTopScreen() -- top screen
 SW, SH = SCREEN_WIDTH, SCREEN_HEIGHT -- screen width and height
@@ -85,6 +84,52 @@ notes = {
 }
 
 return Def.ActorFrame {
+	PrepCommand = function(self)
+		self:queuecommand('Ready')
+	end,
+	ReadyCommand = function(self)
+		SCREEN = SCREENMAN:GetTopScreen() -- top screen
+		for i = 1, GAMESTATE:GetNumPlayersEnabled() do
+			local info = {}
+			local pl = SCREEN:GetChild('PlayerP'..i)
+			if pl then
+				info.Player = pl
+				info.Life = SCREEN:GetChild('LifeP'..i)
+				info.Score = SCREEN:GetChild('ScoreP'..i)
+				info.Combo = pl:GetChild('Combo')
+				info.Judgment = pl:GetChild('Judgment')
+				info.NoteField = pl:GetChild('NoteField')
+				PL[i] = info
+			end
+		end
+		PL = setmetatable(PL, {
+			__index = function(this, number)
+				if number < 1 or number > #this then
+					printerr( string.format('[PL] No player was found on index %i, using first item instead.', number) )
+					return this[1]
+				end
+				return this
+			end
+		})
+		if SRT_STYLE then
+			SCREEN:GetChild('Underlay'):hidden(1)
+			for pn = 1, #PL do
+				PL[pn].Life:hidden(1)
+				PL[pn].Score:hidden(1)
+			end
+			SCREEN:GetChild('Overlay'):hidden(1)
+		end
+		if CENTER_PLAYERS then
+			for pn = 1, #PL do
+				PL[pn].Player:x(SCX)
+			end
+		end
+		if sudo.ready then
+			sudo.ready()
+		end
+		MESSAGEMAN:Broadcast('Draw')
+		self:queuecommand('BeginFrame')
+	end,
 	BeginFrameCommand = function(self)
 		TICK = 1 / TICKRATE
 		if CONST_TICK then
@@ -109,49 +154,6 @@ return Def.ActorFrame {
 	end,
 	EndFrameCommand = function(self)
 		self:sleep(DT)
-		self:queuecommand('BeginFrame')
-	end,
-	ReadyCommand = function(self)
-		-- Second set of global variables
-		for i = 1, GAMESTATE:GetNumPlayersEnabled() do
-			local info = {}
-
-			local pl = SCREEN:GetChild('PlayerP'..i)
-			if pl then
-				info.Player = pl
-				info.Life = SCREEN:GetChild('LifeP'..i)
-				info.Score = SCREEN:GetChild('ScoreP'..i)
-				info.Combo = pl:GetChild('Combo')
-				info.Judgment = pl:GetChild('Judgment')
-				info.NoteField = pl:GetChild('NoteField')
-				PL[i] = info
-			end
-		end
-		PL = setmetatable(PL, {
-			__index = function(this, number)
-				if number < 1 or number > #this then
-					printerr( string.format('[PL] No player was found on index %i, using first item instead.', number) )
-					return this[1]
-				end
-				return this
-			end
-		})
-		if sudo.ready then
-			sudo.ready()
-		end
-		if CENTER_PLAYERS then
-			for pn = 1, #PL do
-				PL[pn].Player:x(SCX)
-			end
-		end
-		if SRT_STYLE then
-			for i = 1, #PL do
-				PL[i].Life:hidden(1)
-				PL[i].Score:hidden(1)
-			end
-			SCREEN:GetChild('Overlay'):hidden(1)
-		end
-		MESSAGEMAN:Broadcast('Draw')
 		self:queuecommand('BeginFrame')
 	end,
 	StepP1LeftPressMessageCommand = function(self)
