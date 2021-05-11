@@ -1,5 +1,3 @@
-sudo()
-
 local settings = {
     MidiInput = {
         P1 = {

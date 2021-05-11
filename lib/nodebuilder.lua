@@ -1,5 +1,3 @@
-sudo()
-
 local Node
 local NodeTree = Def.ActorFrame { }
 
@@ -33,6 +31,9 @@ local function AttachScript(self, scriptpath)
 	end
 	self.InputMessageCommand = function(self)
 		if scr.input then return scr.input(self, event) end
+	end
+	self.DrawMessageCommand = function(self)
+		if scr.draw then self:SetDrawFunction(scr.draw) end
 	end
 end
 local function SetReady(self, func)
