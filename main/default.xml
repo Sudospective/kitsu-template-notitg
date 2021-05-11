@@ -10,8 +10,8 @@
         self:sleep(9e9)
 		sudo.ActorList = Def.ActorFrame {
             assert(loadfile('lib/stdlib.lua'))(),
-            assert(loadfile('lua/nodes.lua'))(),
-			assert(loadfile('lua/mods.lua'))(),
+            sudo(assert(loadfile('lua/nodes.lua')))(),
+			sudo(assert(loadfile('lua/mods.lua')))(),
 		}
     end"
     OnCommand = "%function(self)

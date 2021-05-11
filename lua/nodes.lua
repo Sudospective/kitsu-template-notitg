@@ -25,8 +25,6 @@
 -- (like players and other screen elements)
 ---------------------------
 
-sudo()
-
 ---------------------------
 -- Uncomment for example --
 ---------------------------

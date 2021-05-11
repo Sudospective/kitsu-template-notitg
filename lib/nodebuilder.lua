@@ -6,10 +6,11 @@ local NodeTree = Def.ActorFrame { }
 
 -- This would be used for extending the metatable of the node, I hope? For whatever reason...
 local function extends(self, nodeType)
+	self = Def[nodeType](self)
 end
 
 local function new(obj)
-	--Trace('Node.new')
+	--printerr('Node.new')
 	local t
 	if type(obj) == 'string' then
 		t = { Type = obj }
@@ -20,9 +21,9 @@ local function new(obj)
 	return t
 end
 local function AttachScript(self, scriptpath)
-	--Trace('Node:AttachScript')
+	--printerr('Node:AttachScript')
 	kitsu = {}
-	assert(loadfile(scriptpath))()
+	sudo(assert(loadfile(scriptpath)))()
 	local scr = deepcopy(kitsu)
 	self.ReadyCommand = function(self)
 		if scr.ready then return scr.ready(self) end
@@ -35,28 +36,35 @@ local function AttachScript(self, scriptpath)
 	end
 end
 local function SetReady(self, func)
-	--Trace('Node:SetReady')
+	--printerr('Node:SetReady')
 	self.ReadyCommand = function(self)
 		return func(self)
 	end
 end
 local function SetUpdate(self, func)
-	--Trace('Node:SetUpdate')
+	--printerr('Node:SetUpdate')
 	self.UpdateMessageCommand = function(self)
 		return func(self, DT)
 	end
 end
 local function SetInput(self, func)
+	--printerr('Node:SetInput')
 	self.InputMessageCommand = function(self)
 		return func(self, event)
 	end
 end
+local function SetDraw(self, func)
+	--printerr('Node:SetDraw')
+	self.DrawMessageCommand = function(self)
+		self:SetDrawFunction(func)
+	end
+end
 local function AddToNodeTree(self)
-	--Trace('Node:AddToNodeTree')
+	--printerr('Node:AddToNodeTree')
 	table.insert(NodeTree, self)
 end
 local function GetNodeTree()
-	--Trace('Node.GetNodeTree')
+	--printerr('Node.GetNodeTree')
 	return NodeTree
 end
 
@@ -66,6 +74,7 @@ Node = {
 	SetReady = SetReady,
 	SetUpdate = SetUpdate,
 	SetInput = SetInput,
+	SetDraw = SetDraw,
 	AddToNodeTree = AddToNodeTree,
 	GetNodeTree = GetNodeTree
 }
