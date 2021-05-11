@@ -380,7 +380,7 @@ return Def.ActorFrame {
 				elseif midi_type == v.Hold then
 					event.type = 'InputEventType_Repeat'
 					--[[
-					if notes[event.button] and notes[event.button][1][2] == column and notes[event.button][1][3] == 2 then
+					if notes[event.button] and notes[event.button][1] and notes[event.button][1][2] == column and notes[event.button][1][3] == 2 then
 						PL[player].Player:RealStep(column)
 						PL[player].Player:DidHoldNote(column)
 					end
