@@ -1,4 +1,5 @@
 local settings = {
+	-- Change these settings to your own MIDI device output.
     MidiInput = {
         P1 = {
             Left = 0,
@@ -22,5 +23,4 @@ local settings = {
         }
     }
 }
-
 return settings
