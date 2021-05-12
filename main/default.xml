@@ -15,7 +15,7 @@
         self:sleep(9e9)
     end"
 	OnCommand = "%function(self)
-		self:playcommand('Prep')
+		self:playcommand('Ready')
 	end"
 ><children>
 	<Layer 

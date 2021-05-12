@@ -20,7 +20,7 @@ end
 
 sudo()
 
-function require(lib)
+function import(lib)
 	return sudo(assert(loadfile('lib/'..lib..'.lua')))()
 end
 
@@ -59,11 +59,11 @@ TPB = SPB * TICKRATE -- ticks per beat
 CENTER_PLAYERS = false
 SRT_STYLE = false
 
-Settings = assert(loadfile('lua/settings.lua'))() -- Settings
-
 
 sudo(assert(loadfile('main/libloader.lua')))() -- Libloader
 
+
+Settings = assert(loadfile('lua/settings.lua'))() -- Settings
 
 PL = {}
 
@@ -84,52 +84,6 @@ notes = {
 }
 
 return Def.ActorFrame {
-	PrepCommand = function(self)
-		self:queuecommand('Ready')
-	end,
-	ReadyCommand = function(self)
-		SCREEN = SCREENMAN:GetTopScreen() -- top screen
-		for i = 1, GAMESTATE:GetNumPlayersEnabled() do
-			local info = {}
-			local pl = SCREEN:GetChild('PlayerP'..i)
-			if pl then
-				info.Player = pl
-				info.Life = SCREEN:GetChild('LifeP'..i)
-				info.Score = SCREEN:GetChild('ScoreP'..i)
-				info.Combo = pl:GetChild('Combo')
-				info.Judgment = pl:GetChild('Judgment')
-				info.NoteField = pl:GetChild('NoteField')
-				PL[i] = info
-			end
-		end
-		PL = setmetatable(PL, {
-			__index = function(this, number)
-				if number < 1 or number > #this then
-					printerr( string.format('[PL] No player was found on index %i, using first item instead.', number) )
-					return this[1]
-				end
-				return this
-			end
-		})
-		if SRT_STYLE then
-			SCREEN:GetChild('Underlay'):hidden(1)
-			for pn = 1, #PL do
-				PL[pn].Life:hidden(1)
-				PL[pn].Score:hidden(1)
-			end
-			SCREEN:GetChild('Overlay'):hidden(1)
-		end
-		if CENTER_PLAYERS then
-			for pn = 1, #PL do
-				PL[pn].Player:x(SCX)
-			end
-		end
-		if sudo.ready then
-			sudo.ready()
-		end
-		MESSAGEMAN:Broadcast('Draw')
-		self:queuecommand('BeginFrame')
-	end,
 	BeginFrameCommand = function(self)
 		TICK = 1 / TICKRATE
 		if CONST_TICK then
@@ -154,6 +108,52 @@ return Def.ActorFrame {
 	end,
 	EndFrameCommand = function(self)
 		self:sleep(DT)
+		self:queuecommand('BeginFrame')
+	end,
+	ReadyCommand = function(self)
+		if sudo.ready then
+			sudo.ready()
+		end
+		self:queuecommand('Start')
+	end,
+	StartCommand = function(self)
+		SCREEN = SCREENMAN:GetTopScreen() -- top screen
+		for i = 1, GAMESTATE:GetNumPlayersEnabled() do
+			local info = {}
+			local pl = SCREEN:GetChild('PlayerP'..i)
+			if pl then
+				info.Player = pl
+				info.Life = SCREEN:GetChild('LifeP'..i)
+				info.Score = SCREEN:GetChild('ScoreP'..i)
+				info.Combo = pl:GetChild('Combo')
+				info.Judgment = pl:GetChild('Judgment')
+				info.NoteField = pl:GetChild('NoteField')
+				PL[i] = info
+			end
+		end
+		PL = setmetatable(PL, {
+			__index = function(this, number)
+				if number < 1 or number > #this then
+					printerr( string.format('[PL] No player was found on index %i, using first item instead.', number) )
+					return this[1]
+				end
+				return this
+			end
+		})
+		if CENTER_PLAYERS then
+			for pn = 1, #PL do
+				PL[pn].Player:x(SCX)
+			end
+		end
+		if SRT_STYLE then
+			SCREEN:GetChild('Underlay'):hidden(1)
+			for pn = 1, #PL do
+				PL[pn].Life:hidden(1)
+				PL[pn].Score:hidden(1)
+			end
+			SCREEN:GetChild('Overlay'):hidden(1)
+		end
+		MESSAGEMAN:Broadcast('Draw')
 		self:queuecommand('BeginFrame')
 	end,
 	StepP1LeftPressMessageCommand = function(self)

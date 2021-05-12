@@ -1,6 +1,6 @@
-Node = require 'nodebuilder' -- Nodebuilder
-Mods = require 'modsbuilder' -- Modsbuilder
-Tweens = require 'ease' -- Eases
+Node = import 'nodebuilder' -- Nodebuilder
+Mods = import 'modsbuilder' -- Modsbuilder
+Tweens = import 'ease' -- Eases
 
 -- corope.lua needs to be ported for Lua 5.0 before being enabled for NotITG. ~Sudo
 --[[
