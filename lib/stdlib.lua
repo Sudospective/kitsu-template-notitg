@@ -368,20 +368,16 @@ return Def.ActorFrame {
 			if player then
 				event.PlayerNumber = player - 1
 				event.controller = 'GameController_'..player
+				-- For now, it's up to the player to map their MIDI controller. ~Sudo
 				if midi_type == v.Press then
-					--[[
-					notes[event.button] = PL[player].Player:GetNoteData(BEAT - 0.1, BEAT + 0.1)
-					PL[player].Player:RealStep(column)
-					--]]
 					event.type = 'InputEventType_FirstPress'
-				elseif midi_type == v.Hold then
-					event.type = 'InputEventType_Repeat'
-					--[[
-					if notes[event.button] and notes[event.button][1] and notes[event.button][1][2] == column and notes[event.button][1][3] == 2 then
-						PL[player].Player:RealStep(column)
-						PL[player].Player:DidHoldNote(column)
+					---[[
+					if BEAT > 0 then
+						--PL[player].Player:RealStep(column) -- Has a chance to crash the game. Don't use this until it's fixed. ~Sudo
 					end
 					--]]
+				elseif midi_type == v.Hold then
+					event.type = 'InputEventType_Repeat'
 				elseif midi_type == v.Release then
 					event.type = 'InputEventType_Release'
 				end
