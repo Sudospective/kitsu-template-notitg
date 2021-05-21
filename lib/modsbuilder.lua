@@ -168,6 +168,7 @@ end
 Mods = {
     new = new,
     InsertMod = InsertMod,
+	LoadFromFile = LoadFromFile,
     MirinMod = MirinMod,
     ExschMod = ExschMod,
     Default = Default,
