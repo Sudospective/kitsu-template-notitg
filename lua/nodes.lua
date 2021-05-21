@@ -25,10 +25,13 @@
 -- (like players and other screen elements)
 ---------------------------
 
----------------------------
--- Uncomment for example --
----------------------------
---[[
+----------------------------
+-- Uncomment for examples --
+----------------------------
+
+---[[
+local QuadPadParent = Node.new('ActorFrame')
+
 local QuadPad = {}
 local PadDirs = {"Left", "Down", "Up", "Right"}
 for i = 1, 4 do
@@ -60,9 +63,34 @@ for i = 1, 4 do
 			end
 		end
 	end)
-	QuadPad[idx]:AddToNodeTree()
+	QuadPad[idx]:AddToNode(QuadPadParent)
+end
+
+QuadPadParent:SetReady(function(self)
+	SCREENMAN:SystemMessage('hewo! im am parent and hab smol in me!')
+end)
+QuadPadParent:AddToNodeTree()
+--]]
+
+--[[
+local goodboi = {}
+for i = 1, 48 do
+	local idx = i
+	goodboi[idx] = Node.new('Quad')
+	goodboi[idx]:SetReady(function(self)
+		self:xy(80 * ((idx - 1) % 8), 80 * (math.floor((idx - 1) / 8)))
+		print(self:GetX(), self:GetY())
+		self:addx(40)
+		self:addy(40)
+		self:SetWidth(80)
+		self:SetHeight(80)
+		self:diffuse(0, 0, 0, 0.25)
+		self:zoom(0.9)
+	end)
+	goodboi[idx]:AddToNodeTree()
 end
 --]]
+
 ---------------------------
 
 -- This centers the player if there's only one

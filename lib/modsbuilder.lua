@@ -16,24 +16,45 @@ end
 -- TODO: Make this less painful to deal with before you die at age 80.
 local branches = {}
 local mod_percents = {}
+
+for i = 1, 2 do
+	mod_percents[i] = {}
+end
+
 local function UpdateMods()
     for _, b in ipairs(branches) do
         for i, m in ipairs(b) do
             for j, v in ipairs(m.Modifiers) do
                 -- If the player where we're trying to access is not available, then don't even update.
-                if m.Player and not POptions[ m.Player ] then break end
+                if m.Player and not PL[m.Player].Player then break end
                 if BEAT >= m.Start and BEAT < (m.Start + m.Length) then
-                    -- Get start percent
-                    local pl = m.Player or 1
-                    v[3] = v[3] or mod_percents[v[2]] or 0
-                    local ease = m.Ease((BEAT - m.Start) / m.Length)
-                    local perc = ease * (v[1] - v[3]) + v[3]
-                    ApplyMods(v[2], perc, m.Player)
-                    mod_percents[v[2]] = perc
+                    if m.Player then
+						local last_perc = v[3] or mod_percents[m.Player][v[2]] or 0
+						local ease = m.Ease((BEAT - m.Start) / m.Length)
+						local perc = ease * (v[1] - last_perc) + last_perc
+						ApplyMods(v[2], perc, m.Player)
+						mod_percents[m.Player][v[2]] = perc
+						mod_percents[3 - m.Player][v[2]] = mod_percents[3 - m.Player][v[2]] or 0
+					else
+						for pn = 1, 2 do
+							local last_perc = v[3] or mod_percents[pn][v[2]] or 0
+							local ease = m.Ease((BEAT - m.Start) / m.Length)
+							local perc = ease * (v[1] - last_perc) + last_perc
+							ApplyMods(v[2], perc, pn)
+							mod_percents[pn][v[2]] = perc
+						end
+					end
                 elseif BEAT >= (m.Start + m.Length) then
-                    ApplyMods(v[2], v[1], m.Player)
-                    mod_percents[v[2]] = v[1]
-                    table.remove(m.Modifiers, j)
+                    if m.Player then
+						ApplyMods(v[2], v[1], m.Player)
+						mod_percents[m.Player][v[2]] = v[1]
+						mod_percents[3 - m.Player][v[2]] = mod_percents[3 - m.Player][v[2]] or 0
+					else
+						for pn = 1, 2 do
+							ApplyMods(v[2], v[1], pn)
+							mod_percents[pn][v[2]] = v[1]
+						end
+					end
                 end
             end
             if #b < 1 then table.remove(branches, i) end
@@ -66,6 +87,11 @@ local function new()
     local t = {}
     setmetatable(t, Mods)
     return t
+end
+-- Load a mod file.
+local function LoadFromFile(scriptpath)
+	--printerr('Mods.LoadFromFile')
+	sudo(assert(loadfile(SongDir..'lua/'..scriptpath..'.lua')))()
 end
 -- Write to a mod branch.
 local function InsertMod(self, start, len, ease, modpairs, offset, pn)

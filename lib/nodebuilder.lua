@@ -32,9 +32,6 @@ local function AttachScript(self, scriptpath)
 	self.InputMessageCommand = function(self)
 		if scr.input then return scr.input(self, event) end
 	end
-	self.DrawMessageCommand = function(self)
-		if scr.draw then self:SetDrawFunction(scr.draw) end
-	end
 end
 local function SetReady(self, func)
 	--printerr('Node:SetReady')
@@ -54,11 +51,9 @@ local function SetInput(self, func)
 		return func(self, event)
 	end
 end
-local function SetDraw(self, func)
-	--printerr('Node:SetDraw')
-	self.DrawMessageCommand = function(self)
-		self:SetDrawFunction(func)
-	end
+local function AddToNode(self, node)
+	--printerr('Node:AddToNode')
+	table.insert(node, self)
 end
 local function AddToNodeTree(self)
 	--printerr('Node:AddToNodeTree')
@@ -75,7 +70,7 @@ Node = {
 	SetReady = SetReady,
 	SetUpdate = SetUpdate,
 	SetInput = SetInput,
-	SetDraw = SetDraw,
+	AddToNode = AddToNode,
 	AddToNodeTree = AddToNodeTree,
 	GetNodeTree = GetNodeTree
 }
