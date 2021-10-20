@@ -1,8 +1,9 @@
---ease.xml
---Orignal by XeroOl
-sudo()
+-- ease.lua --
 
-local ease
+-- Orignal ease.xml by XeroOl
+
+local ease = {}
+setmetatable(ease, {})
 
 -- make a self-filling table based on a generator function
 local function cache(func)
@@ -240,5 +241,7 @@ ease = {
 	outbounce = outBounce,
 	inoutbounce = inOutBounce,
 }
+
+ease.__index = ease
 
 return ease

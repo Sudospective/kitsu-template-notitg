@@ -1,6 +1,6 @@
-<!-- default.xml -->
+-- default.lua --
 
-<!--
+--[[
 
     Woah! You're not supposed to be here! This is the backend!
     I suppose that since you're here, you wanna learn the
@@ -22,42 +22,27 @@
 
     Have your Lua manual handy, this is some hardcore C-style shit.
 
--->
+]]--
 
-<Layer
-    Type = "ActorFrame"
-    Condition = "(function(self)
-		-- This load the absolutely necessary stuff for the template's Actors to work at all.
-        assert(loadfile('main/actorgen.lua'))()
-		-- This loads the absolutely necessary stuff for the template's environment to work properly.
-        assert(loadfile('main/env.lua'))()
-		-- This loads our environment.
-		sudo()
-		-- This loads our mods.lua, where the user puts their code.
-		run 'lua/mods'
-		-- This returns true because we are in a condition and not returning true means this don't dang run
-        return true
-    end)()"
-	OnCommand = "%function(self)
-		self:playcommand('Ready')
-	end"
-	ReadyCommand = "%function(self)
+-- Let's get our song directory real quick.
+local dir = GAMESTATE:GetCurrentSong():GetSongDir()
+-- This loads the absolutely necessary stuff for the template's environment to work properly.
+assert(loadfile(dir .. 'main/env.lua'))()
+-- This loads our environment.
+sudo()
+-- This loads our mods.lua, where the user puts their code.
+run 'lua/mods'
+return Def.ActorFrame {
+	OnCommand = function(self)
+		self:queuecommand('Ready')
+	end,
+	ReadyCommand = function(self)
 		self:queuecommand('Start')
-	end"
-><children>
-	<!--
-		This is our root layer, where actorgen creates a shitton of XML actors
-		god i hate modfile xml
-	-->
-	<Layer 
-		Name="Root"
-		File="actors.xml"
-		Condition="actorgen.Template(sudo.ActorList)"
-		InitCommand="%actorgen.InitCmd"
-	/>
-</children></Layer>
+	end,
+	FG
+}
 
-<!--
+--[[
 
 	The rest is a deep dive through the files of the template. I really encourage you to explore them.
 	I've left a lot of helpful comments. Have fun.
@@ -69,4 +54,4 @@
     |   known for its cunning and speed.  |
     ---------------------------------------
 
--->
+--]]

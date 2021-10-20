@@ -34,7 +34,7 @@ local ceil = math.ceil
 local getn = table.getn
 local lower = string.lower
 
-local typespec = assert(loadfile("lib/typespec.lua"))()
+local typespec = assert(loadfile("main/typespec.lua"))()
 
 local function GetDepth(t)
     local depth = ceil(log(getn(t)))
@@ -282,7 +282,7 @@ function actorgen.Def:__index(k)
     end
 end
 
-Def = {}
+_G.Def = {}
 setmetatable(Def, actorgen.Def)
 
 return actorgen
