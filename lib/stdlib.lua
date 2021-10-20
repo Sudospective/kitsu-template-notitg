@@ -265,9 +265,8 @@ function std.ProxyJudgment(proxy, pn)
 	proxy:SetTarget(plr:GetChild('Judgment'))
 	proxy:xy(plr:GetX(), std.SCY)
 	proxy:zoom(THEME:GetMetric('Common', 'ScreenHeight') / 720)
-	plr:GetChild('Judgment')
-	plr:visible(0)
-	plr:sleep(9e9)
+	plr:GetChild('Judgment'):visible(0)
+	plr:GetChild('Judgment'):sleep(9e9)
 	std.PL[pn].ProxyJ = proxy
 end
 
@@ -281,9 +280,8 @@ function std.ProxyCombo(proxy, pn)
 	proxy:SetTarget(plr:GetChild('Combo'))
 	proxy:xy(plr:GetX(), std.SCY)
 	proxy:zoom(THEME:GetMetric('Common', 'ScreenHeight') / 720)
-	plr:GetChild('Combo')
-	plr:visible(0)
-	plr:sleep(9e9)
+	plr:GetChild('Combo'):visible(0)
+	plr:GetChild('Combo'):sleep(9e9)
 	std.PL[pn].ProxyC = proxy
 end
 
